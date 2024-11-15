@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import ContactForm from './Components/contactform';
+import ContactsTable from './Components/contacttable';
+import { getContacts, addContact, updateContact, deleteContact } from './services/contactsService';
 
 function App() {
+  const [contacts, setContacts] = useState([]);
+
+  useEffect(() => {
+    setContacts(getContacts());
+  }, []);
+
+  const handleAddContact = (contact) => {
+    addContact(contact);
+    setContacts(getContacts());
+  };
+
+  const handleDeleteContact = (id) => {
+    deleteContact(id);
+    setContacts(getContacts());
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Contacts Manager</h1>
+      <ContactForm onAddContact={handleAddContact} />
+      <ContactsTable contacts={contacts} onDeleteContact={handleDeleteContact} />
     </div>
   );
 }
